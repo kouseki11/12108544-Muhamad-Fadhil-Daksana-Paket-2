@@ -1,6 +1,23 @@
 <x-admin-layout>
 
     <div class="p-4 py-20 sm:ml-64">
+        @if(session ('success'))
+    <div id="toast-success" class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+            </svg>
+            <span class="sr-only">Check icon</span>
+        </div>
+        <div class="ms-3 text-sm font-normal">{{ session('success') }}</div>
+        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+        </button>
+    </div>
+    @endif
         <div class="text-2xl">
             <p>Products Master</p>
         </div>
@@ -39,16 +56,16 @@
                             #
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Nama Pelanggan
+                            Customer Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Tanggal Penjualan
+                            Sale Date
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Total Harga
+                            Price Total
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Dibuat Oleh
+                            Created By
                         </th>
                         <th scope="col" class="px-6 py-3">
                             <span class="sr-only">Edit</span>
@@ -81,7 +98,7 @@
                                 <a href="{{ route('sale.export', $sale->id) }}"
                                     class="text-white focus:ring-4 bg-blue-300 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Download
                                     Proof</a>
-                                @if(Auth::user()->hasRole('staff'))
+                                @if(Auth::user()->hasRole('admin'))
                                 <a href="{{ route('sale.destroy', $sale->id) }}" 
                                     class="text-white focus:ring-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                     Delete</a>
@@ -91,6 +108,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="flex justify-end mt-2">
+            {{ $sales->links() }}
         </div>
     </div>
 
@@ -125,9 +145,9 @@
 
                     <div class="mt-4">
                         <div class="info">
-                            <p class="mb-2">Nama Pelanggan : {{ $sale['customer']['name'] }}</p>
-                            <p class="mb-2">Alamat Pelanggan : {{ $sale['customer']['address'] }}</p>
-                            <p class="mb-2">No HP Pelanggan : {{ $sale['customer']['phone_number'] }}</p>
+                            <p class="mb-2">Customer Name : {{ $sale['customer']['name'] }}</p>
+                            <p class="mb-2">Customer Address : {{ $sale['customer']['address'] }}</p>
+                            <p class="mb-2">Custumer Phone Number : {{ $sale['customer']['phone_number'] }}</p>
                         </div>
                     </div>
 
@@ -136,9 +156,9 @@
                             <table class="w-full">
                                 <thead>
                                     <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                                        <th class="py-2 px-3 text-left">Nama Produk</th>
+                                        <th class="py-2 px-3 text-left">Product Name</th>
                                         <th class="py-2 px-3 text-left">Qty</th>
-                                        <th class="py-2 px-3 text-left">Harga</th>
+                                        <th class="py-2 px-3 text-left">Price</th>
                                         <th class="py-2 px-3 text-left">Sub Total</th>
                                     </tr>
                                 </thead>
@@ -156,9 +176,23 @@
                                     <tr class="bg-gray-200">
                                         <td class="py-2 px-3"></td>
                                         <td class="py-2 px-3"></td>
-                                        <td class="py-2 px-3 font-bold">Total Harga</td>
+                                        <td class="py-2 px-3 font-bold">Price Total</td>
                                         <td class="py-2 px-3 font-bold">Rp.
                                             {{ number_format($sale['price_total'], '0', ',', '.') }}</td>
+                                    </tr>
+                                    <tr class="bg-gray-200">
+                                        <td class="py-2 px-3 font-bold">Cash</td>
+                                        <td class="py-2 px-3"></td>
+                                        <td class="py-2 px-3 font-bold"></td>
+                                        <td class="py-2 px-3 font-bold">Rp.
+                                            {{ number_format($sale['customer']['cash'], '0', ',', '.') }}</td>
+                                    </tr>
+                                    <tr class="bg-gray-200">
+                                        <td class="py-2 px-3 font-bold">Change</td>
+                                        <td class="py-2 px-3"></td>
+                                        <td class="py-2 px-3 font-bold"></td>
+                                        <td class="py-2 px-3 font-bold">Rp.
+                                            {{ number_format($sale['customer']['change'], '0', ',', '.') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -166,7 +200,7 @@
 
                         <div class="mt-4 text-center">
                             <p class="text-sm">{{ $sale['created_at'] }} | {{ $sale['user']['name'] }}</p>
-                            <p class="legal text-gray-600"><strong>Terima kasih atas pembelian Anda!</strong></p>
+                            <p class="legal text-gray-600"><strong>Thank you for your purchase!</strong></p>
                         </div>
                     </div>
                 </div>

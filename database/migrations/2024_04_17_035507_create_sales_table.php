@@ -17,6 +17,7 @@ return new class extends Migration
             $table->double('price_total');
             $table->foreignId('customer_id');
             $table->foreignId('user_id');
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

@@ -11,11 +11,13 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-
+    //Login View Page
     public function login(): View
     {
         return view('auth.login');
     }
+
+    //Execute Login
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -23,11 +25,12 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         if(Auth::user()->hasRole('staff')) {
-            return redirect()->intended(RouteServiceProvider::SALE);
+            return redirect()->intended(RouteServiceProvider::SALE)->with('success', 'Login Success');
         }
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(RouteServiceProvider::HOME)->with('success', 'Login Success');
     }
 
+    //Execute Logout 
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
@@ -36,6 +39,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Logout Success');
     }
 }

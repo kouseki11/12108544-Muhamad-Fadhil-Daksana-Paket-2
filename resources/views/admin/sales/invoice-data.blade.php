@@ -17,9 +17,9 @@
 
             <div class="mt-4">
                 <div class="info">
-                    <p class="mb-2">Nama Pelanggan : {{ $sales['customer']['name'] }}</p>
-                    <p class="mb-2">Alamat Pelanggan : {{ $sales['customer']['address'] }}</p>
-                    <p class="mb-2">No HP Pelanggan : {{ $sales['customer']['phone_number'] }}</p>
+                    <p class="mb-2">Customer Name : {{ $sales['customer']['name'] }}</p>
+                    <p class="mb-2">Customer Address : {{ $sales['customer']['address'] }}</p>
+                    <p class="mb-2">Customer Phone Number: {{ $sales['customer']['phone_number'] }}</p>
                 </div>
             </div>
 
@@ -28,9 +28,9 @@
                     <table class="w-full">
                         <thead>
                             <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                                <th class="py-2 px-3 text-left">Nama Produk</th>
+                                <th class="py-2 px-3 text-left">Product Name</th>
                                 <th class="py-2 px-3 text-left">Qty</th>
-                                <th class="py-2 px-3 text-left">Harga</th>
+                                <th class="py-2 px-3 text-left">Price</th>
                                 <th class="py-2 px-3 text-left">Sub Total</th>
                             </tr>
                         </thead>
@@ -46,8 +46,20 @@
                             <tr class="bg-gray-200">
                                 <td class="py-2 px-3"></td>
                                 <td class="py-2 px-3"></td>
-                                <td class="py-2 px-3 font-bold">Total Harga</td>
+                                <td class="py-2 px-3 font-bold">Price Total</td>
                                 <td class="py-2 px-3 font-bold">Rp. {{ number_format($sales['price_total'], '0', ',', '.') }}</td>
+                            </tr>
+                            <tr class="bg-gray-200">
+                                <td class="py-2 px-3 font-bold">Cash</td>
+                                <td class="py-2 px-3 font-bold"></td>
+                                <td class="py-2 px-3 font-bold"></td>
+                                <td class="py-2 px-3 font-bold">Rp. {{ number_format($sales['customer']['cash'], '0', ',', '.') }}</td>
+                            </tr>
+                            <tr class="bg-gray-200">
+                                <td class="py-2 px-3 font-bold">Change</td>
+                                <td class="py-2 px-3 font-bold"></td>
+                                <td class="py-2 px-3 font-bold"></td>
+                                <td class="py-2 px-3 font-bold">Rp. {{ number_format($sales['customer']['change'], '0', ',', '.') }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -55,7 +67,7 @@
 
                 <div class="mt-4 text-center">
                     <p class="text-sm">{{ $sales['created_at'] }} | {{ $sales['user']['name'] }}</p>
-                    <p class="legal text-gray-600"><strong>Terima kasih atas pembelian Anda!</strong></p>
+                    <p class="legal text-gray-600"><strong>Thank you for your purchase!</strong></p>
                 </div>
             </div>
         </div>

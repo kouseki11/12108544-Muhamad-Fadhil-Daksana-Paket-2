@@ -18,21 +18,26 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     //Sale View Page
     public function index()
     {
-        $sales = Sale::all();
+        $sales = Sale::latest()->where('status', 0)->paginate(5);
         return view('admin.sales.index', compact('sales'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
+    //Sale View for create page
     public function create()
     {
         $products = Product::all();
         return view('admin.sales.create', compact('products'));
     }
 
+    //Execute Invoice for save session
     public function invoice(Request $request)
     {
         try {
@@ -52,7 +57,7 @@ class SaleController extends Controller
         $items = Product::whereIn('id', $productIdsToSearch)->get();
 
 
-        $errorMessages = [];
+        $errorMessages = '';
 
         foreach ($products as $product) {
             $found = false;
@@ -60,13 +65,13 @@ class SaleController extends Controller
                 if ($product["product_id"] == $item->id) {
                     $found = true;
                     if ($product["quantity"] > $item->stock) {
-                        $errorMessages[] = "Stok product '" . $item->nama_product . "' dengan ID '" . $product["product_id"] . "' tidak mencukupi";
+                        $errorMessages = "Stock product " . $item['name'] . " Insufficient";
                     }
                     break;
                 }
             }
             if (!$found) {
-                $errorMessages[] = "Product dengan ID '" . $product["product_id"] . "' tidak tersedia";
+                $errorMessages = "Product dengan ID '" . $product["product_id"] . "' tidak tersedia";
             }
         }
 
@@ -90,6 +95,7 @@ class SaleController extends Controller
         }
     }
 
+    //Show Invoice and get session
     public function invoiceData(Request $request)
     {
             $products = session("product");
@@ -108,12 +114,21 @@ class SaleController extends Controller
 
             $name = $request->name;
             $phone_number = $request->phone_number;
+            $cash = $request->cash;
             $address = $request->address;
+
+            // if ($cash < $price_total) {
+            //     return redirect()->route('sale.create')->with("error", "Your money is not enough");
+            // }
+
+            $change = $cash - $price_total;
 
             $customer = Customer::create([
                 "name" => $name,
                 "phone_number" => $phone_number,
-                "address" => $address
+                "address" => $address,
+                "cash" => $cash,
+                "change" => $change
             ]);
 
             $sale = Sale::create([
@@ -130,7 +145,7 @@ class SaleController extends Controller
                             'sale_id' => $sale->id,
                             'product_id' => $item->id,
                             'quantity' => $product["quantity"],
-                            'subtotal' => $price
+                            'subtotal' => $product["quantity"] * $item->price
                         ]);
 
                         $productUpdate = Product::find($item->id);
@@ -151,6 +166,7 @@ class SaleController extends Controller
         ));
     }
 
+    //Execute print pdf for invoice
     public function export(Sale $sale)
     {
         $pdf = Pdf::loadView('admin.sales.pdf-print', ['sale' => $sale]);
@@ -158,6 +174,7 @@ class SaleController extends Controller
         return $pdf->download('invoice_' . $sale->customer->name . '.pdf');
     }
 
+    //Execute Sales Report Generate
     public function exportExcel()
     {
         return Excel::download(new SalesExport, 'sales.xlsx');
@@ -201,7 +218,9 @@ class SaleController extends Controller
      */
     public function destroy(Sale $sale)
     {
-        $sale->delete();
+        $sale->update([
+            'status' => 1,
+        ]);
 
         return redirect()->back()->with('success', 'Sale delete successfully!');
     }

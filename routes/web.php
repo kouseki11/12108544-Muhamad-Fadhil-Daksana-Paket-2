@@ -29,8 +29,10 @@ Route::group(['middleware' => 'isLogin'], function () {
         Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 
         Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
+        Route::get('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
         Route::put('/product/{product}', [ProductController::class, 'update'])->name('product.update');
         Route::put('/product/stock/{product}', [ProductController::class, 'addStock'])->name('product.stock');
+        Route::get('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
 
         Route::get('/user-export', [UserController::class, 'export'])->name('user.export');
     });

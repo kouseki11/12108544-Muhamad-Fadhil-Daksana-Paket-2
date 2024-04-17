@@ -87,12 +87,14 @@
                                 {{ $product->name }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900">
-                                {{ $product->price }}
+                                Rp.
+                                    {{ number_format($product->price, '0', ',', '.') }}
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-900">
                                 {{ $product->stock }}
                             </td>
                             <td class="flex px-6 py-4 md:py-14  text-right gap-5">
+                            @if(Auth::user()->hasRole('administrator'))
                                 <button data-modal-target="update{{ $product->id }}"
                                     data-modal-toggle="update{{ $product->id }}" type="button"
                                     class="text-white focus:ring-4 bg-yellow-300 hover:bg-yellow-800 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">Edit</button>
@@ -100,7 +102,10 @@
                                     data-modal-toggle="stock{{ $product->id }}" type="button"
                                     class="text-white focus:ring-4 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add
                                     Stock</button>
+                                <a href="{{ route('product.destroy', $product->id) }}" class="text-white focus:ring-4 bg-red-500 hover:bg-red-800 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    Delete</a>
                             </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
@@ -207,7 +212,7 @@
                         </button>
                     </div>
                     <!-- Modal body -->
-                    <form action="{{ route('product.update', $product->id) }}" method="POST" class="p-4 md:p-5">
+                    <form action="{{ route('product.update', $product->id) }}" method="POST" class="p-4 md:p-5" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="grid gap-4 mb-4 grid-cols-2">
@@ -224,6 +229,15 @@
                                 <input type="text" name="price" id="price"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                     placeholder="Type price" required="" value="{{ $product->price }}">
+                            </div>
+                            <div class="col-span-2 sm:col-span-2">
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">Upload
+                                    file</label>
+                                <input
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                    aria-describedby="image_help" name="image" id="image" type="file">
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="image_help">SVG, PNG, JPG or GIF
+                                    (MAX. 800x400px).</p>
                             </div>
                         </div>
                         <button type="submit"

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->double('price');
             $table->integer('stock');
             $table->text('image')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

@@ -57,16 +57,16 @@
                 <h2>Indo Agus</h2>
             </div>
             <div class="customer-info">
-                <p>Nama Pelanggan: {{ $sale['customer']['name'] }}</p>
-                <p>Alamat Pelanggan: {{ $sale['customer']['address'] }}</p>
-                <p>No HP Pelanggan: {{ $sale['customer']['phone_number'] }}</p>
+                <p>Customer Name: {{ $sale['customer']['name'] }}</p>
+                <p>Customer Address: {{ $sale['customer']['address'] }}</p>
+                <p>Customer Phone Number: {{ $sale['customer']['phone_number'] }}</p>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Nama Produk</th>
+                        <th>Product Name</th>
                         <th>Qty</th>
-                        <th>Harga</th>
+                        <th>Price</th>
                         <th>Sub Total</th>
                     </tr>
                 </thead>
@@ -80,14 +80,22 @@
                     </tr>
                     @endforeach
                     <tr class="total-row">
-                        <td colspan="3">Total Harga</td>
+                        <td colspan="3">Price</td>
                         <td>Rp. {{ number_format($sale['price_total'], 0, ',', '.') }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3">Cash</td>
+                        <td>Rp. {{ number_format($sale['customer']['cash'], 0, ',', '.') }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3">Change</td>
+                        <td>Rp. {{ number_format($sale['customer']['change'], 0, ',', '.') }}</td>
                     </tr>
                 </tbody>
             </table>
             <div class="footer">
                 <p>{{ $sale['created_at'] }} | {{ $sale['user']['name'] }}</p>
-                <p><strong>Terima kasih atas pembelian Anda!</strong></p>
+                <p><strong>Thank you for your purchase!</strong></p>
             </div>
         </div>
     </div>

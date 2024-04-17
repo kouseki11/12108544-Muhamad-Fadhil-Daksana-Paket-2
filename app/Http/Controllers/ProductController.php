@@ -13,9 +13,11 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     //Product View Page
     public function index()
     {
-        $products = Product::latest()->paginate(5);
+        $products = Product::latest()->where('status', 0)->paginate(5);
         return view('admin.products.index', compact('products'));
     }
 
@@ -30,6 +32,8 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+     //Execute Create Product
     public function store(Request $request)
     {
         $request->validate([
@@ -78,29 +82,53 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+     //Execute Update Product
     public function update(Request $request, Product $product)
     {
+        try {
         $request->validate([
             'name' => 'required',
             'price' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        $image = $request->file('image');
+
+            if ($image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('product_images'), $imageName);
+                $imagePost = $imageName;
+            }
+
+            $imagePost = 'product_images/' . $imagePost;
 
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
+            'image' => $imagePost
         ]);
 
         return redirect()->back()->with('success', 'Product updated successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
+
+     //Execute Soft Delete Product
     public function destroy(Product $product)
     {
-        //
+        $product->update([
+            'status' => 1,
+        ]);
+        return redirect()->back()->with('success', 'Product deleted successfully');
     }
 
+    //Execute Add Stock Product
     public function addStock(Request $request, Product $product) 
     {
         try {
@@ -119,6 +147,7 @@ class ProductController extends Controller
         }
     }
 
+    //Execute Product Generate Report
     public function export() 
     {
         return Excel::download(new ProductsExport, 'products.xlsx');

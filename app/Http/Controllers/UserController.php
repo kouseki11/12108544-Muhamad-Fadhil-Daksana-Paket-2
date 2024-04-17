@@ -14,15 +14,19 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    //User View Page
     public function index()
     {
-        $users = User::all();
+        $users = User::where('status', 0)->paginate(5);
         return view('admin.users.index', compact('users'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
+     //User view create page
     public function create()
     {
         return view('admin.users.create');
@@ -31,6 +35,8 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+     //Execute User Create
     public function store(Request $request)
     {
         try {
@@ -80,6 +86,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+     //Execute User Update
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -115,11 +123,18 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+
+     //Execute User Soft Delete
+    public function destroy(User $user)
     {
-        //
+        $user->update([
+            'status' => 1,
+        ]);
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 
+
+    //Execute Export Users
     public function export()
     {
         return Excel::download(new UsersExport, 'users.xlsx');

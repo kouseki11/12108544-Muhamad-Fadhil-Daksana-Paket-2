@@ -32,9 +32,13 @@ class UsersExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            ['USERS REPORT'],
+            [],
+            [
             'Name',
             'Email',
             'Role',
+            ],
         ];
     }
 }

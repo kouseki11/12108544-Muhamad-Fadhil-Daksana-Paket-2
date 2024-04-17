@@ -41,6 +41,9 @@ class SalesExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            ['SALES REPORT'],
+            [],
+            [
             'Customer Name',
             'Address',
             'Phone Number',
@@ -51,6 +54,7 @@ class SalesExport implements FromCollection, WithHeadings
             'Price Total',
             'Created By',
             'Sale Date',
+            ]
         ];
     }
 }
