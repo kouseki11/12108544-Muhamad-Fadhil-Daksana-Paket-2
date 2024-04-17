@@ -76,7 +76,7 @@ class SaleController extends Controller
         }
 
         if (!empty($errorMessages)) {
-            return back()->with("fail", $errorMessages);
+            return back()->with("error", $errorMessages);
         }
 
         // dd($products);
@@ -117,9 +117,9 @@ class SaleController extends Controller
             $cash = $request->cash;
             $address = $request->address;
 
-            // if ($cash < $price_total) {
-            //     return redirect()->route('sale.create')->with("error", "Your money is not enough");
-            // }
+            if ($cash < $price_total) {
+                return redirect()->route('sale.create')->with("error", "Your money is not enough");
+            }
 
             $change = $cash - $price_total;
 

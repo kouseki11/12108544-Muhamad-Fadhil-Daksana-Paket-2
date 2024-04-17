@@ -20,6 +20,7 @@
 <body class="font-sans antialiased">
     <div class="bg-gray-100 dark:bg-gray-900">
         @include('components.sidebar')
+        @include('sweetalert::alert')
 
 
         <!-- Page Content -->
